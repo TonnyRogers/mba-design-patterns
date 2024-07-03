@@ -1,7 +1,36 @@
+import ContractDatabaseRepository from "../src/ContractDatabaseRepository";
+import ContractRepository from "../src/ContractRepository";
 import GenerateInvoices from "../src/GenerateInvoices";
 
+let generateInvoices: GenerateInvoices;
+
+beforeEach(() => {
+  const contractDatabaseRepository: ContractRepository = {
+    async list(): Promise<any> {
+        return [
+          {
+            id: "",
+            description: "",
+            periods: 12,
+            amount: "6000",
+            date: new Date("2024-01-01T10:00:00"),
+            payments: [
+              {
+                id: "",
+                contract_id: "",
+                amount: "6000",
+                date: new Date("2024-01-02T10:00:00"),
+              }
+            ]
+          }
+        ]
+    },
+  }
+  generateInvoices = new GenerateInvoices(contractDatabaseRepository);
+  // generateInvoices = new GenerateInvoices(new ContractDatabaseRepository()); with database
+})
+
 test('should generate invoices to cash regim', async () => {
-  const generateInvoices = new GenerateInvoices();
   const input: any = {
     month: 1,
     year: 2024,
@@ -13,7 +42,6 @@ test('should generate invoices to cash regim', async () => {
 });
 
 test('should generate invoices to accrual regim', async () => {
-  const generateInvoices = new GenerateInvoices();
   const input: any = {
     month: 1,
     year: 2024,
@@ -25,7 +53,6 @@ test('should generate invoices to accrual regim', async () => {
 });
 
 test('should generate invoices to accrual regim', async () => {
-  const generateInvoices = new GenerateInvoices();
   const input: any = {
     month: 2,
     year: 2024,
