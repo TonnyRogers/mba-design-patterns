@@ -3,6 +3,7 @@ import Contract from "./Contract";
 import ContractRepository from "./ContractRepository";
 import DatabaseConnection from "./DatabaseConnection";
 import Payment from "./Payment";
+import CashBasisStrategy from "./CashBasisStrategy";
 
 
 export default class ContractDatabaseRepository implements ContractRepository {
@@ -20,6 +21,7 @@ export default class ContractDatabaseRepository implements ContractRepository {
           date: moment(contractData.date).toDate(),
           description: contractData.description,
           periods: contractData.periods,
+          invoiceGenerationStrategy: new CashBasisStrategy(),
         });
 
         const paymentsData = await this.connection.query('SELECT * FROM payment WHERE contract_id = $1', [contract.id]);

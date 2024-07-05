@@ -1,6 +1,7 @@
 import moment from "moment";
 import Payment from "./Payment";
 import Invoice from "./Invoice";
+import InvoiceGenerationStrategy from "./InvoiceGenerationStrategy";
 
 export default class Contract {
   private payments: Payment[]
@@ -12,7 +13,8 @@ export default class Contract {
       date,
       description,
       periods,
-    }: Pick<Contract, 'id' | 'amount' | 'date' | 'description' | 'periods' >
+      invoiceGenerationStrategy,
+    }: Pick<Contract, 'id' | 'amount' | 'date' | 'description' | 'periods' | 'invoiceGenerationStrategy' >
   ) {
     this.payments = [];
     this.id = id;
@@ -20,13 +22,16 @@ export default class Contract {
     this.date = date;
     this.description = description;
     this.periods = periods;
+    this.invoiceGenerationStrategy = invoiceGenerationStrategy;
   }
   
-  id: string;
-  description: string;
-  amount: number;
-  periods: number;
-  date: Date;
+  readonly id: string;
+  readonly description: string;
+  readonly amount: number;
+  readonly periods: number;
+  readonly date: Date;
+  readonly invoiceGenerationStrategy: InvoiceGenerationStrategy;
+
 
   addPayment (payment: Payment) {
     this.payments.push(payment);
@@ -36,31 +41,12 @@ export default class Contract {
     return this.payments;
   }
 
-  generateInvoices({ type, month, year }: GenerateInvoicesParams) {
-    const invoices: Invoice[] = [];
-    if(type === 'cash') {
-      for (const payment of this.getPayments()) {
-        if (payment.date.getMonth() + 1 !== month || payment.date.getFullYear() !== year) continue;
-        invoices.push(new Invoice({ amount: payment.amount, date: moment(payment.date).format("YYYY-MM-DD") }))
-      }
-    }
-
-    if (type === 'accrual') {
-      let period = 0;
-      while (period <= this.periods) {
-        const date = moment(this.date).add(period++,"months").toDate();
-        if(date.getMonth() + 1 !== month || date.getFullYear() !== year) continue;
-        const amount = this.amount/this.periods;
-        invoices.push(new Invoice({ date: moment(date).format("YYYY-MM-DD"), amount }))
-      }
-    }
-    
-    return invoices;
+  generateInvoices({ month, year }: GenerateInvoicesParams) {
+    return this.invoiceGenerationStrategy.generate(this,month,year);
   }
 }
 
 type GenerateInvoicesParams = {
   month: number;
   year: number;
-  type: "cash" | "accrual"; 
 }

@@ -11,7 +11,6 @@ export default class GenerateInvoices {
     for (const contract of contracts) {
       const invoices = contract.generateInvoices({
         month: input.month,
-        type: input.type,
         year: input.year
       });
 
