@@ -1,18 +1,40 @@
+import moment from "moment";
+import Contract from "./Contract";
 import ContractRepository from "./ContractRepository";
-import pgPromise from "pg-promise"
+import DatabaseConnection from "./DatabaseConnection";
+import Payment from "./Payment";
+
 
 export default class ContractDatabaseRepository implements ContractRepository {
- async list(): Promise<any> {
-    const connection = pgPromise()("postgres://postgres:r373261597y6@localhost:5432/app");
-    const constracts = await connection.query('SELECT * FROM contract', []);
 
-    for (const contract of constracts) {
-        contract.payments = await connection.query('SELECT * FROM payment WHERE contract_id = $1', [contract.id]);
+  constructor (readonly connection: DatabaseConnection) {}
+
+  async list(): Promise<Contract[]> {
+
+    const constractsData = await this.connection.query('SELECT * FROM contract', []);
+    const contracts: Contract[] = [];
+    for (const contractData of constractsData) {
+        const contract = new Contract({
+          id: contractData.id,
+          amount: parseFloat(contractData.amount),
+          date: moment(contractData.date).toDate(),
+          description: contractData.description,
+          periods: contractData.periods,
+        });
+
+        const paymentsData = await this.connection.query('SELECT * FROM payment WHERE contract_id = $1', [contract.id]);
+
+        for (const paymentData of paymentsData) {
+          contract.addPayment(new Payment({ 
+            amount: parseFloat(paymentData.amount), 
+            date: moment(paymentData.date).toDate(),
+          }));     
+        }
+
+        contracts.push(contract);
     }
 
-
-    connection.$pool.end();
-    return constracts;
+    return contracts;
   }
 
 }

@@ -1,8 +1,11 @@
 import ContractDatabaseRepository from "../src/ContractDatabaseRepository";
 import ContractRepository from "../src/ContractRepository";
 import GenerateInvoices from "../src/GenerateInvoices";
+import PgPromiseAdapter from "../src/PgPromiseAdapter";
 
+// integration test
 let generateInvoices: GenerateInvoices;
+const connection = new PgPromiseAdapter();
 
 beforeEach(() => {
   const contractDatabaseRepository: ContractRepository = {
@@ -26,8 +29,10 @@ beforeEach(() => {
         ]
     },
   }
-  generateInvoices = new GenerateInvoices(contractDatabaseRepository);
-  // generateInvoices = new GenerateInvoices(new ContractDatabaseRepository()); with database
+  // generateInvoices = new GenerateInvoices(contractDatabaseRepository);
+  
+  const contractRepository = new ContractDatabaseRepository(connection);
+  generateInvoices = new GenerateInvoices(contractRepository);
 })
 
 test('should generate invoices to cash regim', async () => {
@@ -37,6 +42,7 @@ test('should generate invoices to cash regim', async () => {
     type: "cash",
   }
   const output = await generateInvoices.execute(input);
+  
   expect(output.at(0)?.date).toBe("2024-01-02");
   expect(output.at(0)?.amount).toBe(6000);
 });
@@ -62,3 +68,7 @@ test('should generate invoices to accrual regim', async () => {
   expect(output.at(0)?.date).toBe("2024-02-01");
   expect(output.at(0)?.amount).toBe(500);
 });
+
+afterAll(async () => {
+  connection.close()
+})
