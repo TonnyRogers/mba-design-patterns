@@ -43,8 +43,8 @@ test('should generate invoices to cash regim', async () => {
   }
   const output = await generateInvoices.execute(input);
   
-  expect(output.at(0)?.date).toBe("2024-01-02");
-  expect(output.at(0)?.amount).toBe(6000);
+  expect(typeof output !== 'string' && output.at(0)?.date).toBe("2024-01-02");
+  expect(typeof output !== 'string' && output.at(0)?.amount).toBe(6000);
 });
 
 test('should generate invoices to accrual regim', async () => {
@@ -54,8 +54,19 @@ test('should generate invoices to accrual regim', async () => {
     type: "accrual",
   }
   const output = await generateInvoices.execute(input);
-  expect(output.at(0)?.date).toBe("2024-01-01");
-  expect(output.at(0)?.amount).toBe(500);
+  expect(typeof output !== 'string' && output.at(0)?.date).toBe("2024-01-01");
+  expect(typeof output !== 'string' && output.at(0)?.amount).toBe(500);
+});
+
+test('should generate invoices to accrual regim to csv', async () => {
+  const input: any = {
+    month: 1,
+    year: 2024,
+    type: "accrual",
+    format: 'csv',
+  }
+  const output = await generateInvoices.execute(input);
+  expect(output).toBe("2024-01-01;500");
 });
 
 test('should generate invoices to accrual regim', async () => {
@@ -65,8 +76,8 @@ test('should generate invoices to accrual regim', async () => {
     type: "accrual",
   }
   const output = await generateInvoices.execute(input);
-  expect(output.at(0)?.date).toBe("2024-02-01");
-  expect(output.at(0)?.amount).toBe(500);
+  expect(typeof output !== 'string' && output.at(0)?.date).toBe("2024-02-01");
+  expect(typeof output !== 'string' && output.at(0)?.amount).toBe(500);
 });
 
 afterAll(async () => {

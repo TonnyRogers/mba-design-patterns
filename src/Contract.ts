@@ -2,6 +2,7 @@ import moment from "moment";
 import Payment from "./Payment";
 import Invoice from "./Invoice";
 import InvoiceGenerationStrategy from "./InvoiceGenerationStrategy";
+import InvoiceGenerationFactory from "./InvoiceGenerationFactory";
 
 export default class Contract {
   private payments: Payment[]
@@ -37,16 +38,26 @@ export default class Contract {
     this.payments.push(payment);
   }
 
-  getPayments() {
+  getPayments () {
     return this.payments;
   }
 
-  generateInvoices({ month, year }: GenerateInvoicesParams) {
-    return this.invoiceGenerationStrategy.generate(this,month,year);
+  generateInvoices({ month, year, type }: GenerateInvoicesParams) {
+    const invoiceGenerationStrategy = InvoiceGenerationFactory.create(type);
+    return invoiceGenerationStrategy.generate(this,month,year);
+  }
+
+  getBalance () {
+    let balance = this.amount;
+    this.payments.forEach((item) => {
+      balance -= item.amount;
+    });
+    return balance;
   }
 }
 
 type GenerateInvoicesParams = {
   month: number;
   year: number;
+  type: 'cash'| 'accrual';
 }
