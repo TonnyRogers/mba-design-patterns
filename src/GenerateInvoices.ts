@@ -9,6 +9,7 @@ export default class GenerateInvoices {
   ) {}
 
   async execute(input: Input): Promise<Output[] | string> {
+    console.log(input.userAgent);
 
     const output: Output[] = [];
     const contracts = await this.contractRepository.list();
@@ -32,6 +33,7 @@ type Input = {
   month: number;
   year: number;
   type: "cash" | "accrual";
+  userAgent: string;
 }
 
 export type Output = {
