@@ -16,7 +16,7 @@ test('should generate accrual contract invoices', () => {
     year: 2024,
     type: 'accrual'
   })
-  expect(invoices.at(0)?.date).toBe("2024-01-01");
+  expect(invoices.at(0)?.date).toEqual(new Date("2024-01-01T10:00:00"));
   expect(invoices.at(0)?.amount).toBe(500);
 });
 

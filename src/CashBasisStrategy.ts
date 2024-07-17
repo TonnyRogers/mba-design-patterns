@@ -9,7 +9,7 @@ export default class CashBasisStrategy implements InvoiceGenerationStrategy {
       const invoices: Invoice[] = []
       for (const payment of contract.getPayments()) {
         if (payment.date.getMonth() + 1 !== month || payment.date.getFullYear() !== year) continue;
-        invoices.push(new Invoice({ amount: payment.amount, date: moment(payment.date).format("YYYY-MM-DD") }))
+        invoices.push(new Invoice({ amount: payment.amount, date: payment.date }))
       }
       return invoices;
   }

@@ -13,7 +13,7 @@ export default class AccrualBasisStrategy implements InvoiceGenerationStrategy {
         const date = moment(contract.date).add(period++,"months").toDate();
         if(date.getMonth() + 1 !== month || date.getFullYear() !== year) continue;
         const amount = contract.amount/contract.periods;
-        invoices.push(new Invoice({ date: moment(date).format("YYYY-MM-DD"), amount }))
+        invoices.push(new Invoice({ date: date, amount }))
       }
 
       return invoices;

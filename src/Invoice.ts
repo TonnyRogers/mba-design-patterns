@@ -9,6 +9,6 @@ export default class Invoice {
     this.date = date;
   }
 
-  date: string;
+  date: Date;
   amount: number;
 }

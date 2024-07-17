@@ -1,11 +1,13 @@
 import ContractDatabaseRepository from "../src/ContractDatabaseRepository";
 import ContractRepository from "../src/ContractRepository";
+import CsvPresenter from "../src/CsvPresenter";
 import GenerateInvoices from "../src/GenerateInvoices";
 import PgPromiseAdapter from "../src/PgPromiseAdapter";
 
 // integration test
 let generateInvoices: GenerateInvoices;
 const connection = new PgPromiseAdapter();
+let contractRepository: ContractRepository;
 
 beforeEach(() => {
   const contractDatabaseRepository: ContractRepository = {
@@ -31,7 +33,7 @@ beforeEach(() => {
   }
   // generateInvoices = new GenerateInvoices(contractDatabaseRepository);
   
-  const contractRepository = new ContractDatabaseRepository(connection);
+  contractRepository = new ContractDatabaseRepository(connection);
   generateInvoices = new GenerateInvoices(contractRepository);
 })
 
@@ -65,6 +67,8 @@ test('should generate invoices to accrual regim to csv', async () => {
     type: "accrual",
     format: 'csv',
   }
+  const presenter = new CsvPresenter();
+  generateInvoices = new GenerateInvoices(contractRepository, presenter);
   const output = await generateInvoices.execute(input);
   expect(output).toBe("2024-01-01;500");
 });
