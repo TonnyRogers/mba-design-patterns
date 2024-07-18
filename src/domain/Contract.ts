@@ -1,6 +1,4 @@
-import moment from "moment";
 import Payment from "./Payment";
-import Invoice from "./Invoice";
 import InvoiceGenerationStrategy from "./InvoiceGenerationStrategy";
 import InvoiceGenerationFactory from "./InvoiceGenerationFactory";
 

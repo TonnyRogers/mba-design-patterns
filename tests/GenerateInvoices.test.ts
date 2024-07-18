@@ -1,8 +1,8 @@
-import ContractDatabaseRepository from "../src/ContractDatabaseRepository";
-import ContractRepository from "../src/ContractRepository";
-import CsvPresenter from "../src/CsvPresenter";
-import GenerateInvoices from "../src/GenerateInvoices";
-import PgPromiseAdapter from "../src/PgPromiseAdapter";
+import ContractDatabaseRepository from "../src/infra/repository/ContractDatabaseRepository";
+import ContractRepository from "../src/application/repository/ContractRepository";
+import CsvPresenter from "../src/infra/presenter/CsvPresenter";
+import PgPromiseAdapter from "../src/infra/database/PgPromiseAdapter";
+import GenerateInvoices from "../src/application/usecase/GenerateInvoices";
 
 // integration test
 let generateInvoices: GenerateInvoices;

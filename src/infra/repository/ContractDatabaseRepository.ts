@@ -1,9 +1,9 @@
 import moment from "moment";
-import Contract from "./Contract";
-import ContractRepository from "./ContractRepository";
-import DatabaseConnection from "./DatabaseConnection";
-import Payment from "./Payment";
-import CashBasisStrategy from "./CashBasisStrategy";
+import ContractRepository from "../../application/repository/ContractRepository";
+import DatabaseConnection from "../database/DatabaseConnection";
+import Contract from "../../domain/Contract";
+import CashBasisStrategy from "../../domain/CashBasisStrategy";
+import Payment from "../../domain/Payment";
 
 
 export default class ContractDatabaseRepository implements ContractRepository {

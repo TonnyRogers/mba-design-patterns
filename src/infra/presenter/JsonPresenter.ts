@@ -1,6 +1,6 @@
 import moment from "moment";
-import { Output } from "./GenerateInvoices";
-import Presenter from "./Presenter";
+import Presenter from "../../application/presenter/Presenter";
+import { Output } from "../../application/usecase/GenerateInvoices";
 
 export default class JsonPresenter implements Presenter {
   present(output: Output[]) {

@@ -1,5 +1,5 @@
-import AccrualBasisStrategy from "../src/AccrualBasisStrategy";
-import Contract from "../src/Contract";
+import AccrualBasisStrategy from "../src/domain/AccrualBasisStrategy";
+import Contract from "../src/domain/Contract";
 
 // unit test
 test('should generate accrual contract invoices', () => {
