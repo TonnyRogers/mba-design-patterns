@@ -1,3 +1,4 @@
+import Mediator from "../../infra/mediator/Mediator";
 import JsonPresenter from "../../infra/presenter/JsonPresenter";
 import Presenter from "../presenter/Presenter";
 import ContractRepository from "../repository/ContractRepository";
@@ -6,7 +7,8 @@ import UseCase from "./UseCase";
 export default class GenerateInvoices implements UseCase {
   constructor (
     readonly contractRepository: ContractRepository, 
-    readonly presenter: Presenter = new JsonPresenter()
+    readonly presenter: Presenter = new JsonPresenter(),
+    readonly mediator: Mediator = new Mediator(),
   ) {}
 
   async execute(input: Input): Promise<Output[] | string> {
@@ -23,7 +25,7 @@ export default class GenerateInvoices implements UseCase {
         output.push(invoice);
       });
     }   
-
+    await this.mediator.publish("InvoicesGenerated", output);
     return this.presenter.present(output);
   }
 }
